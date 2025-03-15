@@ -1,0 +1,60 @@
+.wp-block-buntywp-polls-block {
+    .poll-block-editor {
+        .poll-option {
+            align-items: center;
+            margin-bottom: 10px;
+            position: relative;
+
+            .components-text-control__input {
+                margin-right: 36px;
+                /* Space for remove button */
+                width: calc(100% - 60px);
+            }
+
+            .poll-remove-button {
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 0;
+                min-width: 30px;
+                height: 30px;
+                justify-content: center;
+                border-radius: 50%;
+
+                &:hover {
+                    color: #cc1818;
+                }
+
+                &.is-disabled {
+                    opacity: 0.4;
+                }
+            }
+
+            .poll-add-button {
+                position: absolute;
+                right: -10px;
+                top: 50%;
+                transform: translateY(-50%);
+                padding: 0;
+                min-width: 30px;
+                height: 30px;
+                justify-content: center;
+                border-radius: 50%;
+                color: #007cba;
+
+                &:hover {
+                    color: #006ba1;
+                }
+            }
+        }
+    }
+}
+
+/****************************************************************/
+
+.wp-block-buntywp-polls-block {
+    .calculator-output {
+        display: block;
+    }
+}

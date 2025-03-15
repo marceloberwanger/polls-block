@@ -1,0 +1,113 @@
+.wp-block-buntywp-polls-block {
+  .poll-question h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .poll-option {
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .poll-option-label {
+    display: block;
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+
+  .poll-option.cantvote {
+    .poll-option-label,
+    .progress-bar {
+      cursor: unset;
+    }
+  }
+
+  .poll-option-vote {
+    position: absolute;
+    right: 15px;
+    font-weight: 800;
+  }
+
+  .poll-submit {
+    margin-top: 15px;
+  }
+
+  .poll-submit-button {
+    background: #0073aa;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background: #005a87;
+    }
+  }
+
+  .poll-result-item {
+    margin-bottom: 15px;
+  }
+
+  .poll-result-label {
+    margin-bottom: 5px;
+  }
+
+  .poll-result-bar {
+    height: 20px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .poll-result-bar-fill {
+    height: 100%;
+    background: #0073aa;
+  }
+}
+
+/*************************** CALC *********************************/
+
+.poll-option:hover {
+  background-color: #f0f8ff;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: rgba(0, 115, 170, 0.1);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.progress-bar.voted {
+  background-color: rgba(0, 115, 170, 0.2);
+}
+
+.poll-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.user-message {
+  color: #0073aa;
+}
+
+.hidden {
+  display: none;
+}

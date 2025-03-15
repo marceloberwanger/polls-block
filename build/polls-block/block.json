@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "buntywp/polls-block",
+  "version": "0.1.0",
+  "title": "Polls",
+  "category": "widgets",
+  "icon": "chart-bar",
+  "description": "Example block scaffolded with Create Block tool.",
+  "example": {},
+  "supports": {
+    "html": false,
+    "color": {
+      "background": true,
+      "text": true,
+      "heading": true
+    },
+    "shadow": true,
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "__experimentalBorder": {
+      "radius": true,
+      "color": true,
+      "width": true,
+      "style": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true
+      }
+    },
+    "interactivity": true
+  },
+  "attributes": {
+    "question": {
+      "type": "string"
+    },
+    "options": {
+      "type": "array",
+      "default": [
+        {
+          "option": "",
+          "votes": 0
+        },
+        {
+          "option": "",
+          "votes": 0
+        }
+      ]
+    },
+    "blockId": {
+      "type": "string"
+    }
+  },
+  "textdomain": "polls-block",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "render": "file:./render.php",
+  "viewScriptModule": "file:./view.js"
+}
