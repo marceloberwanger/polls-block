@@ -22,7 +22,9 @@ Easily create and manage interactive polls directly within the WordPress Block E
 3. Add/Edit post pr plugin and search "Polls" while searching a block
 
 ## Demo
--- Coming soon --
+https://github.com/user-attachments/assets/85466e48-01dd-4467-b94d-92152a6826af
+
+
 
 ## Prerequisites
 - [Node/NPM](https://nodejs.org/en/download/)
