@@ -3,15 +3,8 @@ import { useEffect } from '@wordpress/element';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { Button, TextControl } from '@wordpress/components';
 import { plus, closeSmall } from '@wordpress/icons';
-
-/**
- * Editor styles
- */
 import './editor.scss';
 
-/**
- * Edit function for the Poll Block
- */
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const { question, options, blockId } = attributes;
 
@@ -24,29 +17,25 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 	}, [ blockId, clientId, setAttributes ] );
 
-	// Function to add a new option.
+	// Add a new option.
 	const addOption = () => {
 		setAttributes( { options: [ ...options, { option: '', votes: 0 } ] } );
 	};
 
-	// Function to remove an option.
+	// Remove an option.
 	const removeOption = ( index ) => {
 		const newOptions = [ ...options ];
 		newOptions.splice( index, 1 );
 		setAttributes( { options: newOptions } );
 	};
 
-	// Function to update option text.
+	// Update option text.
 	const updateOptionText = ( index, value ) => {
-		console.log( 'options', options );
 
 		const updatedOptions = options.map( ( option, i ) =>
 			i === index ? { ...option, option: value } : option
 		);
 		setAttributes( { options: updatedOptions } );
-		// const updatedOptions = [ ...options ];
-		// updatedOptions[ index ][ key ] = value;
-		// setAttributes( { options: updatedOptions } );
 	};
 
 	return (
@@ -57,7 +46,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						tagName="h3"
 						placeholder={ __(
 							'Ask a question',
-							'custom-poll-block'
+							'polls-block'
 						) }
 						value={ question }
 						onChange={ ( value ) =>
@@ -69,7 +58,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<div key={ index } className="poll-option">
 						<TextControl
 							placeholder={
-								__( 'Choice ', 'custom-poll-block' ) +
+								__( 'Choice ', 'polls-block' ) +
 								( index + 1 )
 							}
 							value={ option.option }
@@ -80,7 +69,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						<Button
 							icon={ closeSmall }
 							isSmall
-							label={ __( 'Remove option', 'custom-poll-block' ) }
+							label={ __( 'Remove option', 'polls-block' ) }
 							onClick={ () => removeOption( index ) }
 							className="poll-remove-button"
 							disabled={ options.length <= 2 }
@@ -92,7 +81,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								className="poll-add-button"
 								label={ __(
 									'Add option',
-									'custom-poll-block'
+									'polls-block'
 								) }
 							/>
 						) }

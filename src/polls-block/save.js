@@ -4,8 +4,6 @@ import { useBlockProps, RichText } from '@wordpress/block-editor';
 /**
  * Save function for the Poll Block
  */
-export default function save( { attributes } ) {
-	const { question, options, blockId } = attributes;
-	console.log( 'attributes', attributes );
+export default function save() {
 	return null;
 }

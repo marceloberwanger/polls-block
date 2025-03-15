@@ -52,7 +52,6 @@ const { state } = store( 'buntywp-polls', {
 	callbacks: {
 		logIsPollOpen: () => {
 			const { isOpen } = getContext();
-			console.log( '*isOpen*', isOpen );
 		},
 	},
 } );
