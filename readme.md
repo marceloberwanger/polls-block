@@ -1,6 +1,6 @@
 # Polls Block #
 **Contributors:** [bhargavbhandari90](https://profiles.wordpress.org/bhargavbhandari90/)  
-**Donate link:** https://www.paypal.me/BnB90/50  
+**Donate link:** https://www.paypal.me/BnB90/20  
 **Tags:** block, polls, poll, voting, blocks  
 **Requires at least:** 6.6  
 **Tested up to:** 6.7  
