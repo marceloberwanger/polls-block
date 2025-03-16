@@ -68,6 +68,8 @@ function handle_poll_vote() {
 		unset( $contex['userSelection'] );
 	}
 
+	++$user_selection;
+
 	$post_id  = $contex['postId'];
 	$block_id = $contex['blockId'];
 

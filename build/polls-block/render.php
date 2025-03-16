@@ -33,7 +33,7 @@ if ( ! empty( $meta_context ) ) {
 $is_user_voted = get_user_meta( get_current_user_id(), $meta_key, true );
 
 $context['userVoted']     = ( is_user_logged_in() && $is_user_voted ) ? true : false;
-$context['userSelection'] = $is_user_voted;
+$context['userSelection'] = --$is_user_voted;
 $context['isLoggedIn']    = is_user_logged_in();
 
 wp_interactivity_state(
