@@ -29,7 +29,7 @@ Easily create and manage interactive polls directly within the WordPress Block E
 4. How it looks after voting
 
 == GitHub Repo ==
-https://github.com/BhargavBhandari90/polls-block
+[https://github.com/BhargavBhandari90/polls-block](https://github.com/BhargavBhandari90/polls-block)
 
 == Changelog ==
 
