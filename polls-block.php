@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name:       Polls Block
- * Description:       Create Polls for your WordPress site using Block.
+ * Description:       Create Interactive Polls for your WordPress site using Block.
  * Version:           1.0.0
  * Requires at least: 6.7
  * Requires PHP:      7.4
- * Author:            The WordPress Contributors
+ * Author:            BuntyWP
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       polls-block
@@ -17,25 +17,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-/**
- * Registers the block using the metadata loaded from the `block.json` file.
- * Behind the scenes, it registers also all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://developer.wordpress.org/reference/functions/register_block_type/
- */
-function blp_polls_block_init() {
-	register_block_type( __DIR__ . '/build/polls-block' );
+if ( ! function_exists( 'btwp_polls_block_init' ) ) {
+	/**
+	 * Registers the block using the metadata loaded from the `block.json` file.
+	 * Behind the scenes, it registers also all assets so they can be enqueued
+	 * through the block editor in the corresponding context.
+	 *
+	 * @see https://developer.wordpress.org/reference/functions/register_block_type/
+	 */
+	function btwp_polls_block_init() {
+		register_block_type( __DIR__ . '/build/polls-block' );
+	}
 }
-add_action( 'init', 'blp_polls_block_init' );
+add_action( 'init', 'btwp_polls_block_init' );
 
 /**
  * Store vote counts.
  */
-function handle_poll_vote() {
+function btwp_polls_handle_poll_vote() {
 
 	// Security check.
-	check_ajax_referer( 'poll_vote_nonce', 'nonce' );
+	check_ajax_referer( 'btwp_polls_block_nonce', 'nonce' );
 
 	if ( ! is_user_logged_in() ) {
 		wp_send_json_error(
@@ -72,7 +74,6 @@ function handle_poll_vote() {
 
 	$post_id  = $contex['postId'];
 	$block_id = $contex['blockId'];
-
 	$meta_key = 'poll-' . md5( $block_id );
 
 	update_post_meta( $post_id, $meta_key, $contex );
@@ -85,5 +86,5 @@ function handle_poll_vote() {
 	);
 }
 
-add_action( 'wp_ajax_save_poll_vote', 'handle_poll_vote' );
-add_action( 'wp_ajax_nopriv_save_poll_vote', 'handle_poll_vote' );
+add_action( 'wp_ajax_save_poll_vote', 'btwp_polls_handle_poll_vote' );
+add_action( 'wp_ajax_nopriv_save_poll_vote', 'btwp_polls_handle_poll_vote' );

@@ -31,7 +31,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	// Update option text.
 	const updateOptionText = ( index, value ) => {
-
 		const updatedOptions = options.map( ( option, i ) =>
 			i === index ? { ...option, option: value } : option
 		);
@@ -44,10 +43,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				<div className="poll-question">
 					<RichText
 						tagName="h3"
-						placeholder={ __(
-							'Ask a question',
-							'polls-block'
-						) }
+						placeholder={ __( 'Ask a question', 'polls-block' ) }
 						value={ question }
 						onChange={ ( value ) =>
 							setAttributes( { question: value } )
@@ -58,8 +54,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					<div key={ index } className="poll-option">
 						<TextControl
 							placeholder={
-								__( 'Choice ', 'polls-block' ) +
-								( index + 1 )
+								__( 'Choice ', 'polls-block' ) + ( index + 1 )
 							}
 							value={ option.option }
 							onChange={ ( value ) =>
@@ -79,10 +74,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								icon={ plus }
 								onClick={ addOption }
 								className="poll-add-button"
-								label={ __(
-									'Add option',
-									'polls-block'
-								) }
+								label={ __( 'Add option', 'polls-block' ) }
 							/>
 						) }
 					</div>

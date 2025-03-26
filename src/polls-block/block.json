@@ -6,7 +6,7 @@
 	"title": "Polls",
 	"category": "widgets",
 	"icon": "chart-bar",
-	"description": "Example block scaffolded with Create Block tool.",
+	"description": "Create Interactive Polls for your WordPress site using Block.",
 	"example": {},
 	"supports": {
 		"html": false,

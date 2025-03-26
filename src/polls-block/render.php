@@ -5,6 +5,10 @@
  * @package PollsBlock
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 global $post;
 
 $vote_options = array();
@@ -40,7 +44,7 @@ wp_interactivity_state(
 	'buntywp-polls',
 	array(
 		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
-		'nonce'     => wp_create_nonce( 'poll_vote_nonce' ),
+		'nonce'     => wp_create_nonce( 'btwp_polls_block_nonce' ),
 		'totalVote' => 0,
 		'userVoted' => $is_user_voted,
 	)
@@ -82,7 +86,22 @@ wp_interactivity_state(
 		</div>
 		<?php if ( ! is_user_logged_in() ) : ?>
 			<div class="user-message">
-				<span>Please <a href="<?php echo esc_url( wp_login_url( get_permalink() ) ); ?>">log in</a> to vote in this poll.</span>
+				<?php
+
+				$login_link = wp_sprintf(
+					/* translators: %s: login url, %s: login text */
+					'<a href="%s">%s</a>',
+					esc_url( wp_login_url( get_permalink() ) ),
+					esc_html__( 'log in', 'polls-block' )
+				);
+
+				echo wp_sprintf(
+					/* translators: %s: login link */
+					esc_html__( 'Please %s to vote in this poll.', 'polls-block' ),
+					wp_kses_post( $login_link )
+				);
+
+				?>
 			</div>
 		<?php endif; ?>
 	</div>
