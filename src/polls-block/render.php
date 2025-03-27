@@ -24,7 +24,20 @@ $context = array(
 	'userVoted'  => false,
 	'totalVotes' => 0,
 	'blockId'    => $attributes['blockId'],
+	'isAuditable' => isset( $attributes['isAuditable'] ) ? (bool) $attributes['isAuditable'] : false,
 );
+
+// Get vote counts from database
+$db = new Polls_Block_DB();
+$vote_counts = $db->get_vote_counts( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+$total_votes = $db->get_total_votes( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+
+// Update options with vote counts
+foreach ( $context['options'] as &$option ) {
+	$option['votes'] = isset( $vote_counts[ $option['id'] ] ) ? $vote_counts[ $option['id'] ] : 0;
+}
+
+$context['totalVotes'] = $total_votes;
 
 $meta_key     = 'poll-' . md5( $attributes['blockId'] );
 $meta_context = get_post_meta( $post->ID, $meta_key, true );
@@ -45,8 +58,8 @@ wp_interactivity_state(
 	array(
 		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 		'nonce'     => wp_create_nonce( 'btwp_polls_block_nonce' ),
-		'totalVote' => 0,
-		'userVoted' => $is_user_voted,
+		'totalVote' => $total_votes,
+		'userVoted' => false,
 	)
 );
 

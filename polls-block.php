@@ -17,6 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+// Include database class
+require_once plugin_dir_path( __FILE__ ) . 'includes/class-polls-block-db.php';
+
 if ( ! function_exists( 'btwp_polls_block_init' ) ) {
 	/**
 	 * Registers the block using the metadata loaded from the `block.json` file.
@@ -32,22 +35,20 @@ if ( ! function_exists( 'btwp_polls_block_init' ) ) {
 add_action( 'init', 'btwp_polls_block_init' );
 
 /**
+ * Create tables on plugin activation
+ */
+function btwp_polls_block_activate() {
+	$db = new Polls_Block_DB();
+	$db->create_tables();
+}
+register_activation_hook( __FILE__, 'btwp_polls_block_activate' );
+
+/**
  * Store vote counts.
  */
 function btwp_polls_handle_poll_vote() {
-
 	// Security check.
 	check_ajax_referer( 'btwp_polls_block_nonce', 'nonce' );
-
-	if ( ! is_user_logged_in() ) {
-		wp_send_json_error(
-			array(
-				'message' => esc_html__( 'You must be logged in to vote', 'polls-block' ),
-			),
-			403
-		);
-		return;
-	}
 
 	if ( empty( $_POST['context'] ) ) {
 		wp_send_json_error(
@@ -57,31 +58,44 @@ function btwp_polls_handle_poll_vote() {
 		);
 	}
 
-	$contex = json_decode( stripslashes( sanitize_text_field( wp_unslash( $_POST['context'] ) ) ) );
-	$contex = (array) $contex;
+	$context = json_decode( stripslashes( sanitize_text_field( wp_unslash( $_POST['context'] ) ) ) );
+	$context = (array) $context;
 
-	if ( isset( $contex['item'] ) ) {
-		unset( $contex['item'] );
+	if ( isset( $context['item'] ) ) {
+		unset( $context['item'] );
 	}
 
 	$user_selection = 0;
-	if ( isset( $contex['userSelection'] ) ) {
-		$user_selection = $contex['userSelection'];
-		unset( $contex['userSelection'] );
+	if ( isset( $context['userSelection'] ) ) {
+		$user_selection = $context['userSelection'];
+		unset( $context['userSelection'] );
 	}
 
-	++$user_selection;
+	$post_id  = $context['postId'];
+	$block_id = $context['blockId'];
+	$is_auditable = isset( $context['isAuditable'] ) ? (bool) $context['isAuditable'] : false;
 
-	$post_id  = $contex['postId'];
-	$block_id = $contex['blockId'];
-	$meta_key = 'poll-' . md5( $block_id );
+	$db = new Polls_Block_DB();
+	$result = $db->record_vote( $post_id, $block_id, $user_selection, $is_auditable );
 
-	update_post_meta( $post_id, $meta_key, $contex );
-	update_user_meta( get_current_user_id(), $meta_key, $user_selection );
+	if ( false === $result ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Failed to record vote. Please try again.', 'polls-block' ),
+			)
+		);
+		return;
+	}
+
+	// Get updated vote counts
+	$vote_counts = $db->get_vote_counts( $post_id, $block_id, $is_auditable );
+	$total_votes = $db->get_total_votes( $post_id, $block_id, $is_auditable );
 
 	wp_send_json_success(
 		array(
 			'message' => esc_html__( 'Vote recorded successfully', 'polls-block' ),
+			'voteCounts' => $vote_counts,
+			'totalVotes' => $total_votes,
 		)
 	);
 }

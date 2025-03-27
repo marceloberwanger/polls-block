@@ -51,6 +51,10 @@
 		},
 		"blockId": {
 			"type": "string"
+		},
+		"isAuditable": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"textdomain": "polls-block",
