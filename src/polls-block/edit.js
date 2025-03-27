@@ -1,12 +1,13 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect } from '@wordpress/element';
-import { useBlockProps, RichText } from '@wordpress/block-editor';
-import { Button, TextControl } from '@wordpress/components';
+import { useEffect, useState } from '@wordpress/element';
+import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-editor';
+import { Button, TextControl, PanelBody, ToggleControl } from '@wordpress/components';
 import { plus, closeSmall } from '@wordpress/icons';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { question, options, blockId } = attributes;
+	const { question, options, blockId, isAuditable } = attributes;
+	const [isPollOpen, setIsPollOpen] = useState(true);
 
 	console.log( 'options', options );
 
@@ -16,6 +17,11 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			setAttributes( { blockId: clientId } );
 		}
 	}, [ blockId, clientId, setAttributes ] );
+
+	const blockProps = useBlockProps({
+		'data-wp-interactive': 'buntywp-polls',
+		'data-wp-watch': 'callbacks.logIsPollOpen',
+	});
 
 	// Add a new option.
 	const addOption = () => {
@@ -30,56 +36,78 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	};
 
 	// Update option text.
-	const updateOptionText = ( index, value ) => {
-		const updatedOptions = options.map( ( option, i ) =>
-			i === index ? { ...option, option: value } : option
-		);
-		setAttributes( { options: updatedOptions } );
+	const updateOption = ( index, value ) => {
+		const newOptions = [ ...options ];
+		newOptions[index] = { ...newOptions[index], option: value };
+		setAttributes( { options: newOptions } );
+	};
+
+	const togglePoll = () => {
+		setIsPollOpen(!isPollOpen);
 	};
 
 	return (
-		<div { ...useBlockProps() } key={ blockId }>
-			<div className="poll-block-editor">
-				<div className="poll-question">
-					<RichText
-						tagName="h3"
-						placeholder={ __( 'Ask a question', 'polls-block' ) }
-						value={ question }
-						onChange={ ( value ) =>
-							setAttributes( { question: value } )
-						}
+		<>
+			<InspectorControls>
+				<PanelBody title={__('Poll Settings', 'polls-block')}>
+					<ToggleControl
+						label={__('Is Auditable', 'polls-block')}
+						checked={isAuditable}
+						onChange={(value) => setAttributes({ isAuditable: value })}
+						help={isAuditable ? __('Votes will be stored with IP address and user agent information.', 'polls-block') : __('Votes will be stored without identifying information for better performance.', 'polls-block')}
 					/>
-				</div>
-				{ options.map( ( option, index ) => (
-					<div key={ index } className="poll-option">
-						<TextControl
-							placeholder={
-								__( 'Choice ', 'polls-block' ) + ( index + 1 )
-							}
-							value={ option.option }
+				</PanelBody>
+			</InspectorControls>
+			<div { ...blockProps } key={ blockId }>
+				<div className="poll-block-editor">
+					<div className="poll-question">
+						<RichText
+							tagName="h3"
+							placeholder={ __( 'Ask a question', 'polls-block' ) }
+							value={ question }
 							onChange={ ( value ) =>
-								updateOptionText( index, value )
+								setAttributes( { question: value } )
 							}
 						/>
-						<Button
-							icon={ closeSmall }
-							isSmall
-							label={ __( 'Remove option', 'polls-block' ) }
-							onClick={ () => removeOption( index ) }
-							className="poll-remove-button"
-							disabled={ options.length <= 2 }
-						></Button>
-						{ index === options.length - 1 && (
-							<Button
-								icon={ plus }
-								onClick={ addOption }
-								className="poll-add-button"
-								label={ __( 'Add option', 'polls-block' ) }
-							/>
-						) }
 					</div>
-				) ) }
+					{ options.map( ( option, index ) => (
+						<div key={ index } className="poll-option">
+							<TextControl
+								placeholder={
+									__( 'Choice ', 'polls-block' ) + ( index + 1 )
+								}
+								value={ option.option }
+								onChange={ ( value ) =>
+									updateOption( index, value )
+								}
+							/>
+							<Button
+								icon={ closeSmall }
+								isSmall
+								label={ __( 'Remove option', 'polls-block' ) }
+								onClick={ () => removeOption( index ) }
+								className="poll-remove-button"
+								disabled={ options.length <= 2 }
+							></Button>
+							{ index === options.length - 1 && (
+								<Button
+									icon={ plus }
+									onClick={ addOption }
+									className="poll-add-button"
+									label={ __( 'Add option', 'polls-block' ) }
+								/>
+							) }
+						</div>
+					) ) }
+					<div className="poll-footer">
+						<button onClick={togglePoll} className="toggle-poll">
+							{isPollOpen
+								? __('Close Poll', 'polls-block')
+								: __('Open Poll', 'polls-block')}
+						</button>
+					</div>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
