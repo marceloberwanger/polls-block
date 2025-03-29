@@ -22,6 +22,12 @@
     }
   }
 
+  .poll-option-label.voted {
+    &:hover {
+      background: #ffffff;
+    }
+  }
+
   .poll-option.cantvote {
     .poll-option-label,
     .progress-bar {

@@ -77,7 +77,9 @@ wp_interactivity_state(
 		>
 			<label
 				class="poll-option-label"
-				data-wp-on--click="actions.toggleVote">
+				data-wp-class--voted="state.userVoted"
+				data-wp-on--click="actions.toggleVote"
+			>
 				<span class="poll-option-text" data-wp-text="context.item.option"></span>
 				<span
 					class="vote-confirmed"
