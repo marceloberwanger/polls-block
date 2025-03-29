@@ -47,11 +47,8 @@ if ( ! empty( $meta_context ) ) {
 	$context = $meta_context;
 }
 
-$is_user_voted = get_user_meta( get_current_user_id(), $meta_key, true );
-
-$context['userVoted']     = ( is_user_logged_in() && $is_user_voted ) ? true : false;
-$context['userSelection'] = --$is_user_voted;
-$context['isLoggedIn']    = is_user_logged_in();
+$context['userVoted'] = false;
+$context['userSelection'] = -1;
 
 wp_interactivity_state(
 	'buntywp-polls',
@@ -70,25 +67,34 @@ wp_interactivity_state(
 	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $context ) ); ?>
 	data-wp-watch="callbacks.logIsPollOpen"
 >
-	<div clas="poll-question">
+	<div class="poll-question">
 		<h3><?php echo esc_html( $attributes['question'] ); ?></h3>
 	</div>
 	<template data-wp-each="context.options">
 		<div
 			class="poll-option"
-			data-wp-class--cantvote="!state.userLoggedin"
+			data-wp-class--cantvote="state.userVoted"
 		>
 			<label
 				class="poll-option-label"
 				data-wp-on--click="actions.toggleVote">
 				<span class="poll-option-text" data-wp-text="context.item.option"></span>
-				<span class="dashicons dashicons-yes" data-wp-class--hidden="actions.getUserSelection"></span>
-				<span class="poll-option-vote" data-wp-text="actions.getPercentage"></span>
+				<span
+					class="vote-confirmed"
+					data-wp-class--hidden="!state.userSelection"
+				>
+					<svg viewBox="0 0 24 24" class="vote-icon" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="12" cy="12" r="10" />
+						<path d="M8 12.5l2.5 2.5L16 9" />
+					</svg>
+				</span>
+				<span class="poll-option-vote" data-wp-class--hidden="!state.userVoted" data-wp-text="actions.getPercentage"></span>
 			</label>
 			<div class="progress-bar"
 				data-wp-on--click="actions.toggleVote"
 				data-wp-style--width="actions.getPercentage"
-				data-wp-class--voted="state.userVoted">
+				data-wp-class--voted="state.userVoted"
+				data-wp-class--hidden="!state.userVoted">
 				<div class="progress-fill"></div>
 			</div>
 		</div>
@@ -97,25 +103,5 @@ wp_interactivity_state(
 		<div class="total-votes">
 			<span data-wp-text="state.totalVoteCount"></span> <?php echo wp_kses_data( _n( 'vote', 'votes', $context['totalVotes'], 'polls-block' ) ); ?>
 		</div>
-		<?php if ( ! is_user_logged_in() ) : ?>
-			<div class="user-message">
-				<?php
-
-				$login_link = wp_sprintf(
-					/* translators: %s: login url, %s: login text */
-					'<a href="%s">%s</a>',
-					esc_url( wp_login_url( get_permalink() ) ),
-					esc_html__( 'log in', 'polls-block' )
-				);
-
-				echo wp_sprintf(
-					/* translators: %s: login link */
-					esc_html__( 'Please %s to vote in this poll.', 'polls-block' ),
-					wp_kses_post( $login_link )
-				);
-
-				?>
-			</div>
-		<?php endif; ?>
 	</div>
 </div>

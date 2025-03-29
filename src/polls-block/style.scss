@@ -10,7 +10,7 @@
   }
 
   .poll-option-label {
-    display: block;
+    display: flex;
     padding: 8px 12px;
     background: #fff;
     border: 1px solid #ddd;
@@ -70,6 +70,27 @@
   .poll-result-bar-fill {
     height: 100%;
     background: #0073aa;
+  }
+
+  .vote-confirmed:not(.hidden) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-left: 10px;
+  }
+  
+  .vote-confirmed .vote-icon {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #28a745; /* verde */
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 }
 

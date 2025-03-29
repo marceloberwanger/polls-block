@@ -6,24 +6,31 @@ const { state } = store( 'buntywp-polls', {
 			const context = getContext();
 			return context.totalVotes;
 		},
-		get userLoggedin() {
+		get userVoted() {
 			const context = getContext();
-			return context.isLoggedIn;
+			return context.userVoted;
+		},
+		get userSelection() {
+			const context = getContext();
+			const selected = parseInt(context.userSelection);
+			const current = parseInt(context.options[context.item.id].id);
+			console.log('userSelection:', selected, '===', current);
+			return ( selected === current ) ? true : false;
 		},
 	},
 	actions: {
 		toggleVote: () => {
 			const context = getContext();
 
-			// Return, if already voted or not loggedin.
-			if ( context.userVoted || ! context.isLoggedIn ) {
+			// Return, if already voted.
+			if ( context.userVoted ) {
 				return;
 			}
 
 			let index = context.item.id;
 			context.options[ index ].votes =
 				( context.options[ index ].votes || 0 ) + 1;
-			context.userSelection = index;
+			context.userSelection = context.options[index].id;
 			context.options = context.options;
 			context.totalVotes = Number( context.totalVotes + 1 );
 			context.userVoted = true;
@@ -38,15 +45,6 @@ const { state } = store( 'buntywp-polls', {
 			const percentage =
 				( context.options[ index ].votes / context.totalVotes ) * 100;
 			return `${ percentage.toFixed( 0 ) }%`;
-		},
-
-		getUserSelection: () => {
-			const context = getContext();
-			let index = context.item.id;
-			return ! (
-				parseInt( context.options[ index ].id ) ===
-				parseInt( context.userSelection )
-			);
 		},
 	},
 	callbacks: {
