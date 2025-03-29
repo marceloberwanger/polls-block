@@ -68,7 +68,7 @@ wp_interactivity_state(
 	data-wp-watch="callbacks.logIsPollOpen"
 >
 	<div class="poll-question">
-		<h3><?php echo esc_html( $attributes['question'] ); ?></h3>
+		<h3><?php echo wp_kses_post( $attributes['question'] ); ?></h3>
 	</div>
 	<template data-wp-each="context.options">
 		<div
