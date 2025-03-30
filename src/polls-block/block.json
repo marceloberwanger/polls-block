@@ -55,6 +55,10 @@
 		"isAuditable": {
 			"type": "boolean",
 			"default": false
+		},
+		"isPollOpen": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"textdomain": "polls-block",

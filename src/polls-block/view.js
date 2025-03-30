@@ -14,16 +14,19 @@ const { state } = store( 'buntywp-polls', {
 			const context = getContext();
 			const selected = parseInt(context.userSelection);
 			const current = parseInt(context.options[context.item.id].id);
-			console.log('userSelection:', selected, '===', current);
 			return ( selected === current ) ? true : false;
+		},
+		get isPollOpen() {
+			const context = getContext();
+			return context.isPollOpen;
 		},
 	},
 	actions: {
 		toggleVote: () => {
 			const context = getContext();
 
-			// Return, if already voted.
-			if ( context.userVoted ) {
+			// Return if poll is closed or already voted
+			if ( !context.isPollOpen || context.userVoted ) {
 				return;
 			}
 

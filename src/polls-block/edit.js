@@ -1,15 +1,12 @@
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { useBlockProps, RichText, InspectorControls } from '@wordpress/block-editor';
 import { Button, TextControl, PanelBody, ToggleControl } from '@wordpress/components';
 import { plus, closeSmall } from '@wordpress/icons';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { question, options, blockId, isAuditable } = attributes;
-	const [isPollOpen, setIsPollOpen] = useState(true);
-
-	console.log( 'options', options );
+	const { question, options, blockId, isAuditable, isPollOpen } = attributes;
 
 	// Set a unique blockId if not already set.
 	useEffect( () => {
@@ -42,19 +39,21 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		setAttributes( { options: newOptions } );
 	};
 
-	const togglePoll = () => {
-		setIsPollOpen(!isPollOpen);
-	};
-
 	return (
 		<>
 			<InspectorControls>
 				<PanelBody title={__('Poll Settings', 'polls-block')}>
 					<ToggleControl
-						label={__('Is Auditable', 'polls-block')}
+						label={__('Is auditable', 'polls-block')}
 						checked={isAuditable}
 						onChange={(value) => setAttributes({ isAuditable: value })}
 						help={isAuditable ? __('Votes will be stored with IP address and user agent information.', 'polls-block') : __('Votes will be stored without identifying information for better performance.', 'polls-block')}
+					/>
+					<ToggleControl
+						label={__('Is poll open for voting', 'polls-block')}
+						checked={isPollOpen}
+						onChange={(value) => setAttributes({ isPollOpen: value })}
+						help={isPollOpen ? __('Poll is currently open for voting.', 'polls-block') : __('Poll is currently closed.', 'polls-block')}
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -99,13 +98,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							) }
 						</div>
 					) ) }
-					<div className="poll-footer">
-						<button onClick={togglePoll} className="toggle-poll">
-							{isPollOpen
-								? __('Close Poll', 'polls-block')
-								: __('Open Poll', 'polls-block')}
-						</button>
-					</div>
 				</div>
 			</div>
 		</>
