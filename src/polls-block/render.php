@@ -26,6 +26,7 @@ $context = array(
 	'blockId'    => $attributes['blockId'],
 	'isAuditable' => isset( $attributes['isAuditable'] ) ? (bool) $attributes['isAuditable'] : false,
 	'isPollOpen' => isset( $attributes['isPollOpen'] ) ? (bool) $attributes['isPollOpen'] : true,
+	'showResultsInNewPage' => isset( $attributes['showResultsInNewPage'] ) ? (bool) $attributes['showResultsInNewPage'] : false,
 );
 
 // Get vote counts from database
@@ -52,7 +53,6 @@ wp_interactivity_state(
 		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 		'nonce'     => wp_create_nonce( 'btwp_polls_block_nonce' ),
 		'totalVote' => $total_votes,
-		'userVoted' => false,
 	)
 );
 
@@ -61,6 +61,7 @@ wp_interactivity_state(
 	<?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive="buntywp-polls"
 	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $context ) ); ?>
+	data-wp-init="actions.initUserVoteState"
 	data-wp-watch="callbacks.logIsPollOpen"
 >
 	<div class="poll-question">

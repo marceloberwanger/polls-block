@@ -59,6 +59,10 @@
 		"isPollOpen": {
 			"type": "boolean",
 			"default": true
+		},
+		"showResultsInNewPage": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"textdomain": "polls-block",
