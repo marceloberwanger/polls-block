@@ -40,16 +40,11 @@ foreach ( $context['options'] as &$option ) {
 
 $context['totalVotes'] = $total_votes;
 
-$meta_key     = 'poll-' . md5( $attributes['blockId'] );
-$meta_context = get_post_meta( $post->ID, $meta_key, true );
-$meta_context = json_decode( wp_json_encode( $meta_context ), true );
-
-if ( ! empty( $meta_context ) ) {
-	$context = $meta_context;
+// If poll is closed, show results immediately
+if ( ! $context['isPollOpen'] ) {
+	$context['userVoted'] = true;
+	$context['userSelection'] = -1;
 }
-
-$context['userVoted'] = false;
-$context['userSelection'] = -1;
 
 wp_interactivity_state(
 	'buntywp-polls',
@@ -105,6 +100,7 @@ wp_interactivity_state(
 	<div class="poll-footer">
 		<div class="total-votes">
 			<span data-wp-text="state.totalVoteCount"></span> <?php echo wp_kses_data( _n( 'vote', 'votes', $context['totalVotes'], 'polls-block' ) ); ?>
+			<?php if ( ! $context['isPollOpen'] ) : ?> - <span class="poll-closed-message"><?php echo wp_kses_post( __( 'This poll is now closed.', 'polls-block' ) ); ?></span><?php endif; ?>
 		</div>
 	</div>
 </div>
