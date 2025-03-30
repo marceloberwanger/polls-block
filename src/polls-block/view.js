@@ -49,6 +49,17 @@ const { state } = store( 'buntywp-polls', {
 				( context.options[ index ].votes / context.totalVotes ) * 100;
 			return `${ percentage.toFixed( 0 ) }%`;
 		},
+		initUserVoteState: () => {
+			const context = getContext();
+			const key_voted = `poll_voted_${context.blockId}`;
+			const key_selection = `poll_selection_${context.blockId}`;
+			if (localStorage.getItem(key_voted) === '1') {
+				context.userVoted = true;
+				context.userSelection = parseInt(localStorage.getItem(key_selection));
+				localStorage.removeItem(key_voted);
+				localStorage.removeItem(key_selection);
+			}
+		},
 	},
 	callbacks: {
 		logIsPollOpen: () => {
@@ -77,6 +88,12 @@ function saveVoteToServer( context ) {
 		.then( ( response ) => response.json() )
 		.then( ( data ) => {
 			console.log( 'Vote saved:', data );
+
+			if (context.showResultsInNewPage) {
+				localStorage.setItem(`poll_voted_${context.blockId}`, '1');
+				localStorage.setItem(`poll_selection_${context.blockId}`, context.userSelection);
+				window.location.reload();
+			}
 		} )
 		.catch( ( error ) => {
 			console.error( 'Error saving vote:', error );
