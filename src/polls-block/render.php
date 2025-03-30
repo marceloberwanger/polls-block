@@ -26,6 +26,7 @@ $context = array(
 	'blockId'    => $attributes['blockId'],
 	'isAuditable' => isset( $attributes['isAuditable'] ) ? (bool) $attributes['isAuditable'] : false,
 	'isPollOpen' => isset( $attributes['isPollOpen'] ) ? (bool) $attributes['isPollOpen'] : true,
+	'showResultsInNewPage' => isset( $attributes['showResultsInNewPage'] ) ? (bool) $attributes['showResultsInNewPage'] : false,
 );
 
 // Get vote counts from database

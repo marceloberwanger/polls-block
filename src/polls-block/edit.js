@@ -6,7 +6,7 @@ import { plus, closeSmall } from '@wordpress/icons';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
-	const { question, options, blockId, isAuditable, isPollOpen } = attributes;
+	const { question, options, blockId, isAuditable, isPollOpen, showResultsInNewPage } = attributes;
 
 	// Set a unique blockId if not already set.
 	useEffect( () => {
@@ -54,6 +54,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						checked={isPollOpen}
 						onChange={(value) => setAttributes({ isPollOpen: value })}
 						help={isPollOpen ? __('Poll is currently open for voting.', 'polls-block') : __('Poll is currently closed.', 'polls-block')}
+					/>
+					<ToggleControl
+						label={__('Show results in new page', 'polls-block')}
+						checked={showResultsInNewPage}
+						onChange={(value) => setAttributes({ showResultsInNewPage: value })}
+						help={showResultsInNewPage ? __('Results will be reload the same page.', 'polls-block') : __('Results will be displayed inline.', 'polls-block')}
 					/>
 				</PanelBody>
 			</InspectorControls>
