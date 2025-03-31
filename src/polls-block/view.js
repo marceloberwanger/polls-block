@@ -1,4 +1,14 @@
-import { store, getContext } from '@wordpress/interactivity';
+import { store, getContext, withScope } from '@wordpress/interactivity';
+
+withScope(() => {
+	const context = getContext();
+	const storageKey = `poll_voted_${context.blockId}`;
+
+	if (localStorage.getItem(storageKey) === '1') {
+		context.userVoted = true;
+		localStorage.removeItem(storageKey);
+	}
+});
 
 const { state } = store( 'buntywp-polls', {
 	state: {
@@ -92,6 +102,13 @@ function saveVoteToServer( context ) {
 			if (context.showResultsInNewPage) {
 				localStorage.setItem(`poll_voted_${context.blockId}`, '1');
 				localStorage.setItem(`poll_selection_${context.blockId}`, context.userSelection);
+
+				const container = document.querySelector('.poll-container');
+				const loader = document.querySelector('.poll-loader');
+			
+				if (container) container.classList.add('hidden');
+				if (loader) loader.classList.remove('hidden');
+
 				window.location.reload();
 			}
 		} )
