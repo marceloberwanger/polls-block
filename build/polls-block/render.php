@@ -24,29 +24,35 @@ $context = array(
 	'userVoted'  => false,
 	'totalVotes' => 0,
 	'blockId'    => $attributes['blockId'],
+	'isAuditable' => isset( $attributes['isAuditable'] ) ? (bool) $attributes['isAuditable'] : false,
+	'isPollOpen' => isset( $attributes['isPollOpen'] ) ? (bool) $attributes['isPollOpen'] : true,
+	'showResultsInNewPage' => isset( $attributes['showResultsInNewPage'] ) ? (bool) $attributes['showResultsInNewPage'] : false,
 );
 
-$meta_key     = 'poll-' . md5( $attributes['blockId'] );
-$meta_context = get_post_meta( $post->ID, $meta_key, true );
-$meta_context = json_decode( wp_json_encode( $meta_context ), true );
+// Get vote counts from database
+$db = new Polls_Block_DB();
+$vote_counts = $db->get_vote_counts( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+$total_votes = $db->get_total_votes( $post->ID, $attributes['blockId'], $context['isAuditable'] );
 
-if ( ! empty( $meta_context ) ) {
-	$context = $meta_context;
+// Update options with vote counts
+foreach ( $context['options'] as &$option ) {
+	$option['votes'] = isset( $vote_counts[ $option['id'] ] ) ? $vote_counts[ $option['id'] ] : 0;
 }
 
-$is_user_voted = get_user_meta( get_current_user_id(), $meta_key, true );
+$context['totalVotes'] = $total_votes;
 
-$context['userVoted']     = ( is_user_logged_in() && $is_user_voted ) ? true : false;
-$context['userSelection'] = --$is_user_voted;
-$context['isLoggedIn']    = is_user_logged_in();
+// If poll is closed, show results immediately
+if ( ! $context['isPollOpen'] ) {
+	$context['userVoted'] = true;
+	$context['userSelection'] = -1;
+}
 
 wp_interactivity_state(
 	'buntywp-polls',
 	array(
 		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 		'nonce'     => wp_create_nonce( 'btwp_polls_block_nonce' ),
-		'totalVote' => 0,
-		'userVoted' => $is_user_voted,
+		'totalVote' => $total_votes,
 	)
 );
 
@@ -55,27 +61,39 @@ wp_interactivity_state(
 	<?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>
 	data-wp-interactive="buntywp-polls"
 	<?php echo wp_kses_data( wp_interactivity_data_wp_context( $context ) ); ?>
+	data-wp-init="actions.initUserVoteState"
 	data-wp-watch="callbacks.logIsPollOpen"
 >
-	<div clas="poll-question">
-		<h3><?php echo esc_html( $attributes['question'] ); ?></h3>
+	<div class="poll-question">
+		<h3><?php echo wp_kses_post( $attributes['question'] ); ?></h3>
 	</div>
 	<template data-wp-each="context.options">
 		<div
 			class="poll-option"
-			data-wp-class--cantvote="!state.userLoggedin"
+			data-wp-class--cantvote="state.userVoted"
 		>
 			<label
 				class="poll-option-label"
-				data-wp-on--click="actions.toggleVote">
+				data-wp-class--voted="state.userVoted"
+				data-wp-on--click="actions.toggleVote"
+			>
 				<span class="poll-option-text" data-wp-text="context.item.option"></span>
-				<span class="dashicons dashicons-yes" data-wp-class--hidden="actions.getUserSelection"></span>
-				<span class="poll-option-vote" data-wp-text="actions.getPercentage"></span>
+				<span
+					class="vote-confirmed"
+					data-wp-class--hidden="!state.userSelection"
+				>
+					<svg viewBox="0 0 24 24" class="vote-icon" xmlns="http://www.w3.org/2000/svg">
+						<circle cx="12" cy="12" r="10" />
+						<path d="M8 12.5l2.5 2.5L16 9" />
+					</svg>
+				</span>
+				<span class="poll-option-vote" data-wp-class--hidden="!state.userVoted" data-wp-text="actions.getPercentage"></span>
 			</label>
 			<div class="progress-bar"
 				data-wp-on--click="actions.toggleVote"
 				data-wp-style--width="actions.getPercentage"
-				data-wp-class--voted="state.userVoted">
+				data-wp-class--voted="state.userVoted"
+				data-wp-class--hidden="!state.userVoted">
 				<div class="progress-fill"></div>
 			</div>
 		</div>
@@ -83,26 +101,7 @@ wp_interactivity_state(
 	<div class="poll-footer">
 		<div class="total-votes">
 			<span data-wp-text="state.totalVoteCount"></span> <?php echo wp_kses_data( _n( 'vote', 'votes', $context['totalVotes'], 'polls-block' ) ); ?>
+			<?php if ( ! $context['isPollOpen'] ) : ?> - <span class="poll-closed-message"><?php echo wp_kses_post( __( 'This poll is now closed.', 'polls-block' ) ); ?></span><?php endif; ?>
 		</div>
-		<?php if ( ! is_user_logged_in() ) : ?>
-			<div class="user-message">
-				<?php
-
-				$login_link = wp_sprintf(
-					/* translators: %s: login url, %s: login text */
-					'<a href="%s">%s</a>',
-					esc_url( wp_login_url( get_permalink() ) ),
-					esc_html__( 'log in', 'polls-block' )
-				);
-
-				echo wp_sprintf(
-					/* translators: %s: login link */
-					esc_html__( 'Please %s to vote in this poll.', 'polls-block' ),
-					wp_kses_post( $login_link )
-				);
-
-				?>
-			</div>
-		<?php endif; ?>
 	</div>
 </div>

@@ -51,6 +51,18 @@
     },
     "blockId": {
       "type": "string"
+    },
+    "isAuditable": {
+      "type": "boolean",
+      "default": false
+    },
+    "isPollOpen": {
+      "type": "boolean",
+      "default": true
+    },
+    "showResultsInNewPage": {
+      "type": "boolean",
+      "default": false
     }
   },
   "textdomain": "polls-block",

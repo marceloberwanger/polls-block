@@ -1,1 +1,122 @@
-.wp-block-buntywp-polls-block .poll-question h3{margin-bottom:20px;margin-top:0}.wp-block-buntywp-polls-block .poll-option{margin-bottom:10px;position:relative}.wp-block-buntywp-polls-block .poll-option-label{background:#fff;border:1px solid #ddd;border-radius:4px;cursor:pointer;display:block;padding:8px 12px}.wp-block-buntywp-polls-block .poll-option-label:hover{background:#f0f0f0}.wp-block-buntywp-polls-block .poll-option.cantvote .poll-option-label,.wp-block-buntywp-polls-block .poll-option.cantvote .progress-bar{cursor:unset}.wp-block-buntywp-polls-block .poll-option-vote{font-weight:800;position:absolute;left:15px}.wp-block-buntywp-polls-block .poll-submit{margin-top:15px}.wp-block-buntywp-polls-block .poll-submit-button{background:#0073aa;border:none;border-radius:4px;color:#fff;cursor:pointer;padding:8px 16px}.wp-block-buntywp-polls-block .poll-submit-button:hover{background:#005a87}.wp-block-buntywp-polls-block .poll-result-item{margin-bottom:15px}.wp-block-buntywp-polls-block .poll-result-label{margin-bottom:5px}.wp-block-buntywp-polls-block .poll-result-bar{background:#eee;border-radius:3px;height:20px;overflow:hidden}.wp-block-buntywp-polls-block .poll-result-bar-fill{background:#0073aa;height:100%}.poll-option:hover{background-color:#f0f8ff}.progress-bar{background-color:rgba(0,115,170,.1);border-radius:4px;cursor:pointer;height:100%;right:0;position:absolute;top:0;transition:width .5s ease;width:0;z-index:1}.progress-bar.voted{background-color:rgba(0,115,170,.2)}.poll-footer{color:#666;display:flex;font-size:.9em;justify-content:space-between;margin-top:15px}.user-message{color:#0073aa}.hidden{display:none}
+/*!***************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/polls-block/style.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************************/
+.wp-block-buntywp-polls-block .poll-question h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+.wp-block-buntywp-polls-block .poll-option {
+  margin-bottom: 10px;
+  position: relative;
+}
+.wp-block-buntywp-polls-block .poll-option-label {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.wp-block-buntywp-polls-block .poll-option-label:hover {
+  background: #f0f0f0;
+}
+.wp-block-buntywp-polls-block .poll-option-label.voted:hover {
+  background: #ffffff;
+}
+.wp-block-buntywp-polls-block .poll-option.cantvote .poll-option-label,
+.wp-block-buntywp-polls-block .poll-option.cantvote .progress-bar {
+  cursor: unset;
+}
+.wp-block-buntywp-polls-block .poll-option-vote {
+  position: absolute;
+  left: 15px;
+  font-weight: 800;
+}
+.wp-block-buntywp-polls-block .poll-submit {
+  margin-top: 15px;
+}
+.wp-block-buntywp-polls-block .poll-submit-button {
+  background: #0073aa;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.wp-block-buntywp-polls-block .poll-submit-button:hover {
+  background: #005a87;
+}
+.wp-block-buntywp-polls-block .poll-result-item {
+  margin-bottom: 15px;
+}
+.wp-block-buntywp-polls-block .poll-result-label {
+  margin-bottom: 5px;
+}
+.wp-block-buntywp-polls-block .poll-result-bar {
+  height: 20px;
+  background: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.wp-block-buntywp-polls-block .poll-result-bar-fill {
+  height: 100%;
+  background: #0073aa;
+}
+.wp-block-buntywp-polls-block .vote-confirmed:not(.hidden) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  margin-right: 10px;
+}
+.wp-block-buntywp-polls-block .vote-confirmed .vote-icon {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #28a745; /* verde */
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/*************************** CALC *********************************/
+.poll-option:hover {
+  background-color: #f0f8ff;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 0;
+  background-color: rgba(0, 115, 170, 0.1);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.progress-bar.voted {
+  background-color: rgba(0, 115, 170, 0.2);
+}
+
+.poll-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.user-message {
+  color: #0073aa;
+}
+
+.hidden {
+  display: none;
+}
