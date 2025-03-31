@@ -1,16 +1,19 @@
 <?php
 /**
- * Plugin Name:       Polls Block
- * Description:       Create Interactive Polls for your WordPress site using Block.
+ * Plugin Name:       Polls Block for Publishers
+ * Description:       Create Interactive Polls for your WordPress site using Block. Customized version of the "Polls Block" plugin with improvements tailored for publishers.
  * Version:           1.0.0
  * Requires at least: 6.7
  * Requires PHP:      7.4
- * Author:            BuntyWP
+ * Author:            Marcelo Berwanger
+ * Author URI:        https://berwanger.digital
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       polls-block
  *
  * @package PollsBlock
+ * 
+ * Forked from the original plugin "Pools Block"by Bunty - https://github.com/BhargavBhandari90/polls-block
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
