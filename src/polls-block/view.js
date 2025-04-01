@@ -40,13 +40,24 @@ const { state } = store( 'buntywp-polls', {
 				return;
 			}
 
+			const container = document.querySelector('.poll-container');
+			const loader = document.querySelector('.poll-loader');
+		
+			if (container) container.classList.add('hidden');
+			if (loader) loader.classList.remove('hidden');
+
 			let index = context.item.id;
 			context.options[ index ].votes =
 				( context.options[ index ].votes || 0 ) + 1;
 			context.userSelection = context.options[index].id;
 			context.options = context.options;
 			context.totalVotes = Number( context.totalVotes + 1 );
+
 			context.userVoted = true;
+			if(context.showResultsInNewPage) {
+				context.userVoted = false;
+			}
+
 			saveVoteToServer( context );
 		},
 		getPercentage: () => {
@@ -82,6 +93,9 @@ const { state } = store( 'buntywp-polls', {
 				localStorage.removeItem(`poll_voted_${blockId}`);
 				localStorage.removeItem(`poll_selection_${blockId}`);
 			}
+		},
+		reloadPoll: () => {
+			window.location.reload();
 		},		
 	},
 	callbacks: {
@@ -116,15 +130,7 @@ function saveVoteToServer( context ) {
 				localStorage.setItem(`poll_voted_${context.blockId}`, '1');
 				localStorage.setItem(`poll_selection_${context.blockId}`, context.userSelection);
 
-				const container = document.querySelector('.poll-container');
-				const loader = document.querySelector('.poll-loader');
-			
-				if (container) container.classList.add('hidden');
-				if (loader) loader.classList.remove('hidden');
-
-				setTimeout(() => {
-					window.location.reload();
-				}, 1000);
+				window.location.reload();
 			}
 		} )
 		.catch( ( error ) => {

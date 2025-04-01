@@ -119,6 +119,13 @@ wp_interactivity_state(
 				<span data-wp-text="state.totalVoteCount"></span> <?php echo wp_kses_data( _n( 'vote', 'votes', $context['totalVotes'], 'polls-block' ) ); ?>
 				<?php if ( ! $context['isPollOpen'] ) : ?> - <span class="poll-closed-message"><?php echo wp_kses_post( __( 'This poll is now closed.', 'polls-block' ) ); ?></span><?php endif; ?>
 			</div>
+			<div class="poll-actions">
+				<button
+					class="poll-button poll-button-vote-again"
+					data-wp-class--hidden="!state.userVoted"
+					data-wp-on--click="actions.reloadPoll"
+				><?php echo esc_js( __( 'Vote again', 'polls-block' ) ); ?></button>
+			</div>
 		</div>
 	</div>
 </div>
