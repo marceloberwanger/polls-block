@@ -61,15 +61,28 @@ const { state } = store( 'buntywp-polls', {
 		},
 		initUserVoteState: () => {
 			const context = getContext();
-			const key_voted = `poll_voted_${context.blockId}`;
-			const key_selection = `poll_selection_${context.blockId}`;
-			if (localStorage.getItem(key_voted) === '1') {
+			const blockId = context.blockId;
+		
+			const voted = localStorage.getItem(`poll_voted_${blockId}`);
+			const selection = localStorage.getItem(`poll_selection_${blockId}`);
+		
+			if (voted === '1' && selection !== null) {
+				const selectedId = parseInt(selection);
+		
+				// Apply vote manually to cached result
+				const option = context.options.find(opt => parseInt(opt.id) === selectedId);
+				if (option) {
+					option.votes += 1;
+					context.totalVotes += 1;
+				}
+		
 				context.userVoted = true;
-				context.userSelection = parseInt(localStorage.getItem(key_selection));
-				localStorage.removeItem(key_voted);
-				localStorage.removeItem(key_selection);
+				context.userSelection = selectedId;
+		
+				localStorage.removeItem(`poll_voted_${blockId}`);
+				localStorage.removeItem(`poll_selection_${blockId}`);
 			}
-		},
+		},		
 	},
 	callbacks: {
 		logIsPollOpen: () => {
@@ -109,7 +122,9 @@ function saveVoteToServer( context ) {
 				if (container) container.classList.add('hidden');
 				if (loader) loader.classList.remove('hidden');
 
-				window.location.reload();
+				setTimeout(() => {
+					window.location.reload();
+				}, 1000);
 			}
 		} )
 		.catch( ( error ) => {

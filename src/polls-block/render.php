@@ -30,9 +30,24 @@ $context = array(
 );
 
 // Get vote counts from database
-$db = new Polls_Block_DB();
-$vote_counts = $db->get_vote_counts( $post->ID, $attributes['blockId'], $context['isAuditable'] );
-$total_votes = $db->get_total_votes( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+$transient_key = 'poll_data_' . md5( $post->ID . '_' . $attributes['blockId'] . '_' . ( $context['isAuditable'] ? '1' : '0' ) );
+$poll_data = get_transient( $transient_key );
+
+if ( false === $poll_data ) {
+	$db = new Polls_Block_DB();
+	$vote_counts = $db->get_vote_counts( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+	$total_votes = $db->get_total_votes( $post->ID, $attributes['blockId'], $context['isAuditable'] );
+
+	$poll_data = array(
+		'vote_counts' => $vote_counts,
+		'total_votes' => $total_votes,
+	);
+
+	set_transient( $transient_key, $poll_data, 30 ); // 30 seconds
+} else {
+	$vote_counts = $poll_data['vote_counts'];
+	$total_votes = $poll_data['total_votes'];
+}
 
 // Update options with vote counts
 foreach ( $context['options'] as &$option ) {
